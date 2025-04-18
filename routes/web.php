@@ -18,6 +18,8 @@ Route::get('/products', function () {
 });
 
 Route::post('/product', function () {
+    request()->validate(['title' => ['required', 'max:255']]);
+
     Product::query()->create(request()->only('title'));
 
     return response()->json(status: 201);
