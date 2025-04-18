@@ -13,6 +13,9 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('code');
+            $table->foreignId('owner_id')->constrained('users', 'id');
+            $table->boolean('released');
             $table->timestamps();
             $table->softDeletes();
         });
