@@ -1,7 +1,14 @@
 <?php
 
+use App\Mail\WelcomeEmail;
 use App\Models\Product;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/send-email/{user}', function (User $user) {
+    Mail::to($user->email)->send(new WelcomeEmail($user));
+})->name('send-email');
 
 Route::get('/', function () {
     return view('welcome');
