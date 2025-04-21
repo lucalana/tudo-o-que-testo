@@ -1,10 +1,16 @@
 <?php
 
+use App\Jobs\ImportProducts;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/import-product', function () {
+    $produtos = request()->only('produtos');
+    ImportProducts::dispatch($produtos, auth()->id());
+})->name('product.import');
 
 Route::post('/send-email/{user}', function (User $user) {
     Mail::to($user->email)->send(new WelcomeEmail($user));
