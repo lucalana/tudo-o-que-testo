@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\CreateProductAction;
 use App\Jobs\ImportProducts;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
@@ -37,11 +38,12 @@ Route::post('/product', function () {
         'code' => ['required'],
         'released' => ['required'],
     ]);
-    Product::query()->create([
-        'owner_id' => auth()->id(),
+
+    app(CreateProductAction::class)->handle(
+        auth()->user(),
         ...request()->only(['title', 'code', 'released'])
-    ]);
-    auth()->user()->notify(new NewProductNotification());
+    );
+
     return response()->json(status: 201);
 })->name('product.store');
 

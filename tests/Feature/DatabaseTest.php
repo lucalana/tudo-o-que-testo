@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Product;
+use App\Models\User;
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseEmpty;
 use function Pest\Laravel\assertDatabaseHas;
@@ -11,18 +13,22 @@ use function Pest\Laravel\post;
 use function Pest\Laravel\put;
 use function PHPUnit\Framework\assertSame;
 
-it('should be able to create a project', function () {
+it('should be able to create a product', function () {
     //Arrange
+    $user = User::factory()->create();
+    actingAs($user);
     //Act
     post(route('product.store'), [
-        'title' => 'Produto legal!'
+        'title' => 'Produto legal!',
+        'code' => 'code1234',
+        'released' => true,
     ])->assertCreated();
     //Assert
     assertDatabaseHas('products', ['title' => 'Produto legal!']);
     assertDatabaseCount('products', 1);
 });
 
-it('should be able to update a project', function () {
+it('should be able to update a product', function () {
     //Arrange
     $product = Product::factory()->create();
     //Act
@@ -40,7 +46,7 @@ it('should be able to update a project', function () {
     assertDatabaseCount('products', 1);
 });
 
-it('should be able to delete a project', function () {
+it('should be able to delete a product', function () {
     //Arrange
     $product = Product::factory()->create();
     //Act
@@ -50,7 +56,7 @@ it('should be able to delete a project', function () {
     assertDatabaseMissing('products', ['id' => $product->id]);
 });
 
-it('should be able to softdelete a project', function () {
+it('should be able to softdelete a product', function () {
     //Arrange
     $product = Product::factory()->create();
     //Act
