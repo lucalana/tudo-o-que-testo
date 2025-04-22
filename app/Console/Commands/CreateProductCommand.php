@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\Product;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CreateProductCommand extends Command
 {
@@ -24,18 +26,27 @@ class CreateProductCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle(): void
     {
         $title = $this->argument('title');
         $code = $this->argument('code');
         $userId = $this->argument('user');
 
-        if(!$userId) {
+        if (!$userId) {
             $userId = $this->ask('Please provide a valid user id');
         }
-        if(!$title) {
+        if (!$title) {
             $title = $this->ask('Please provide a product title');
         }
+
+        Validator::make(
+            ['title' => $title, 'code' => $code, 'user' => $userId,],
+            [
+                'title' => ['required'],
+                'code' => ['required'],
+                'user' => ['required', Rule::exists('users', 'id')],
+            ]
+        )->validate();
 
         Product::query()->create([
             'title' => $title,
