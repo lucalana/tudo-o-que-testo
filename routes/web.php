@@ -1,13 +1,17 @@
 <?php
 
 use App\Actions\CreateProductAction;
+use App\Http\Middleware\JeremiasMiddleware;
 use App\Jobs\ImportProducts;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
 use App\Models\User;
-use App\Notifications\NewProductNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/secure', function () { })
+    ->middleware(JeremiasMiddleware::class)
+    ->name('secure.route');
 
 Route::post('/import-product', function () {
     $produtos = request()->only('produtos');
