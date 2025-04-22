@@ -9,7 +9,28 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/secure', function () { })
+Route::post('/upload-products', function () {
+    $file = request()->file('file');
+    $openToRead = fopen($file->getRealPath(), 'r');
+
+    while ($data = fgetcsv($openToRead, 1000, ',')) {
+        Product::query()->create([
+            'title' => $data[0],
+            'owner_id' => auth()->id(),
+            'code' => 'Code123',
+            'released' => true
+        ]);
+    }
+
+})->name('upload.products');
+
+Route::post('/upload-avatar', function () {
+    $file = request()->file('file');
+    $file->store('/avatar', 'local');
+})->name('upload.avatar');
+
+Route::get('/secure', function () {
+})
     ->middleware(JeremiasMiddleware::class)
     ->name('secure.route');
 
