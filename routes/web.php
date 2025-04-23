@@ -57,14 +57,14 @@ Route::get('/products', function () {
     ]);
 });
 
-Route::post('/product', function () {
+Route::post('/product', function (CreateProductAction $action) {
     request()->validate([
         'title' => ['required', 'max:255'],
         'code' => ['required'],
         'released' => ['required'],
     ]);
 
-    app(CreateProductAction::class)->handle(
+    $action->handle(
         auth()->user(),
         ...request()->only(['title', 'code', 'released'])
     );
