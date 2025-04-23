@@ -13,7 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
+    'amazon' => [
+        'api_key' => env('AMAZON_KEY')
+    ],
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
